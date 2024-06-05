@@ -30,9 +30,10 @@ jobs:
       run: |
         mkdir -p $GITHUB_WORKSPACE/md
         mkdir -p $GITHUB_WORKSPACE/gguf
-        cd $GITHUB_WORKSPACE/md
-        git lfs install
-        git clone https://huggingface.co/charent/Phi2-Chinese-0.2B .
+        cd $GITHUB_WORKSPACE
+        #git lfs install
+        #git clone https://huggingface.co/charent/Phi2-Chinese-0.2B .
+        python down.py
 
     - name: 转换模型 ##python convert-hf-to-gguf-update.py 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
       run: |
