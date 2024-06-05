@@ -31,12 +31,12 @@ jobs:
         mkdir -p $GITHUB_WORKSPACE/md
         mkdir -p $GITHUB_WORKSPACE/gguf
         cd $GITHUB_WORKSPACE/md
-        git clone https://huggingface.co/microsoft/phi-1 .
+        git git clone https://huggingface.co/microsoft/phi-2 .
 
     - name: 转换模型
       run: |
         cd $GITHUB_WORKSPACE/build_pace
-        python examples/convert-legacy-llama.py --outfile $GITHUB_WORKSPACE/gguf/model-f16.gguf $GITHUB_WORKSPACE/md --vocab-type bpe
+        python convert-hf-to-gguf.py --outfile $GITHUB_WORKSPACE/gguf/model-f16.gguf $GITHUB_WORKSPACE/md --vocab-type bpe
 
     - name: 量化
       run: |
