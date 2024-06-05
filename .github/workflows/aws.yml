@@ -32,13 +32,13 @@ jobs:
         mkdir -p $GITHUB_WORKSPACE/gguf
         cd $GITHUB_WORKSPACE/md
         git lfs install
-        git clone https://huggingface.co/microsoft/phi-2 .
+        git clone https://huggingface.co/charent/Phi2-Chinese-0.2B .
 
     - name: 转换模型 ##python convert-hf-to-gguf-update.py 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
       run: |
         cd $GITHUB_WORKSPACE/build_pace
         
-        python examples/convert-legacy-llama.py --outfile $GITHUB_WORKSPACE/gguf/model-f16.gguf $GITHUB_WORKSPACE/md --vocab-type bpe
+        python convert-hf-to-gguf.py --outfile $GITHUB_WORKSPACE/gguf/model-f16.gguf $GITHUB_WORKSPACE/md
 
     - name: 量化
       run: |
