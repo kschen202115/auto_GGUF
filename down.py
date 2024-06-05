@@ -18,5 +18,5 @@ torch.set_default_device("cpu")
 model = AutoModelForCausalLM.from_pretrained("microsoft/phi-2", torch_dtype="auto", trust_remote_code=True)
 tokenizer = AutoTokenizer.from_pretrained("microsoft/phi-2", trust_remote_code=True)
 
-model.save_pretrained("./saved_model")
-tokenizer.save_pretrained("./saved_model")
+model.save_pretrained("./md")
+tokenizer.save_pretrained("./md")
