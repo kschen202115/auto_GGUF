@@ -31,7 +31,8 @@ jobs:
         mkdir -p $GITHUB_WORKSPACE/md
         mkdir -p $GITHUB_WORKSPACE/gguf
         cd $GITHUB_WORKSPACE/md
-        git git clone https://huggingface.co/microsoft/phi-2 .
+        git lfs install
+        git clone https://huggingface.co/microsoft/phi-2 .
 
     - name: 转换模型
       run: |
