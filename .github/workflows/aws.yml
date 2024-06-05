@@ -1,1 +1,50 @@
+name: build
 
+on:
+  workflow_dispatch: # 用于手动触发工作流
+
+jobs:
+  build:
+    name: Build Kernel by ${{ github.actor }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: 准备
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential python3 python3-pip git libcurl4-openssl-dev libgomp1 git-lfs
+        mkdir -p $GITHUB_WORKSPACE/build_pace
+        cd $GITHUB_WORKSPACE/build_pace
+        git clone https://github.com/ggerganov/llama.cpp.git .
+        pip install --upgrade pip setuptools wheel
+        pip install -r requirements.txt
+
+    - name: 编译 llama.cpp
+      run: |
+        cd $GITHUB_WORKSPACE/build_pace
+        make -j$(nproc --all)
+
+    - name: 下载模型
+      run: |
+        mkdir -p $GITHUB_WORKSPACE/md
+        mkdir -p $GITHUB_WORKSPACE/gguf
+        cd $GITHUB_WORKSPACE/md
+        git clone https://huggingface.co/microsoft/phi-1 .
+
+    - name: 转换模型
+      run: |
+        cd $GITHUB_WORKSPACE/build_pace
+        python convert-hf-to-gguf.py --outfile $GITHUB_WORKSPACE/gguf/model-f16.gguf $GITHUB_WORKSPACE/md
+
+    - name: 量化
+      run: |
+        cd $GITHUB_WORKSPACE/build_pace
+        ./quantize $GITHUB_WORKSPACE/gguf/model-f16.gguf $GITHUB_WORKSPACE/gguf/model-Q4_K_M.gguf Q4_K_M
+
+    - name: 保存
+      uses: actions/upload-artifact@v3
+      with:
+        name: model
+        path: $GITHUB_WORKSPACE/gguf/model-Q4_K_M.gguf
